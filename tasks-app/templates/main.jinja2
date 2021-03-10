@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <title>aatodo</title>
+
+    <style>
+        .task {
+            font-size: large;
+        }
+        .done {
+            text-decoration: line-through;
+            color: grey;
+        }
+    </style>
+</head>
+<body>
+<div class="pl-3">
+    <h3>Задачи:</h3>
+
+    <ul>
+        {% for task in tasks %}
+            {% set is_done = task[2] == 'done' %}
+            <form id="changeTask{{ task[0] }}" action="/change" method="post">
+            <input type="hidden" name="taskId" value="{{ task[0] }}">
+            <input type="hidden" name="targetStatus" value="{% if is_done %}open{% else %}done{% endif %}">
+            </form>
+            <li class="task{% if is_done %} done{% endif %}">{{ task[1] }}</li> <button form="changeTask{{ task[0] }}" class="btn btn-sm{% if is_done %} btn-warning{% else %} btn-success{% endif %}">{% if not is_done %}Done{% else %}Open{% endif %}</button>
+        {% endfor %}
+    </ul>
+</div>
+<div class="pl-3">
+    <h3>Добавить задачу</h3>
+    <form method="post" action="/add">
+        <div class="form-group">
+            <label for="taskBody">Название задачи</label>
+            <input type="text" class="form-control" id="taskBody" name="taskBody"
+                   placeholder="Например: Пройти курс по АА">
+        </div>
+        <button type="submit" class="btn btn-primary">Добавить</button>
+    </form>
+</div>
+</body>
+</html>
